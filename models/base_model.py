@@ -15,6 +15,22 @@ defines all common attributes from other classes:
     created_at = datetime.now()
     updated_at = datetime.now()
 
+    # creating a BaseModel from dictionary
+    def __init__(self, *args, **kwargs):
+        """initializing an instance"""
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                elif key == "__class__":
+                    continue
+
+                setattr(self, key, value)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.update_at = datetime.now()
+
     def __str__(self):
         return ("[{}] ({}) {}".format(self.__class__.__name__, self.id,
                                       self.__dict__))
